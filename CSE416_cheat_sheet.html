@@ -62,7 +62,6 @@
 
   .box-body {
     padding: 2px 4px;
-    font-size: 7.2pt;
   }
 
   .box-body p { margin-bottom: 2px; }
@@ -81,7 +80,7 @@
     padding-left: 10px;
     margin-bottom: 2px;
   }
-  li { margin-bottom: 1px; font-size: 7pt; }
+  li { margin-bottom: 1px; }
 
   .formula {
     font-family: 'Courier New', monospace;
@@ -89,7 +88,7 @@
     border: 1px solid #ccc;
     border-radius: 2px;
     padding: 1px 3px;
-    font-size: 6.8pt;
+    font-size: 7pt;
     display: inline-block;
     margin: 1px 0;
   }
@@ -100,16 +99,15 @@
     border: 1px solid #ccc;
     border-radius: 2px;
     padding: 2px 4px;
-    font-size: 6.8pt;
+    font-size: 7pt;
     margin: 2px 0;
     display: block;
-    word-break: break-word;
   }
 
   table.cs {
     width: 100%;
     border-collapse: collapse;
-    font-size: 6.8pt;
+    font-size: 7pt;
     margin: 2px 0;
   }
   table.cs th {
@@ -145,7 +143,6 @@
 
   @media print {
     .page { page-break-after: always; }
-    body { margin: 0; padding: 0; }
   }
 </style>
 </head>
@@ -153,28 +150,27 @@
 
 <!-- ═══════════════════════ SIDE 1 ═══════════════════════ -->
 <div class="page">
-  <div class="page-header">CSE 416 — MIDTERM CHEAT SHEET &nbsp;|&nbsp; SIDE 1: Core Models &amp; Training</div>
+  <div class="page-header">CSE 416 — MIDTERM CHEAT SHEET &nbsp;|&nbsp; SIDE 1: Models, Training &amp; Regularization</div>
   <div class="cols">
 
     <!-- COL 1 -->
     <div class="col">
 
       <div class="box">
-        <div class="box-title">📐 Linear Regression Fundamentals</div>
+        <div class="box-title">📐 Linear Regression</div>
         <div class="box-body">
-          <div class="subtopic">Core Idea</div>
-          <p>Find weights that fit a hyperplane through data by minimizing prediction error.</p>
+          <div class="subtopic">Model Assumption</div>
+          <p>Relationship between features <b>h(X)</b> and output <b>y</b> is <b>linear</b> (fits a hyperplane).</p>
           <span class="formula-block">ŷ = w₀ + w₁x₁ + … + wₙxₙ = wᵀh(X)</span>
 
-          <div class="subtopic">Training Process</div>
-          <p><b>1. Loss (Mean Squared Error):</b></p>
-          <span class="formula-block">MSE = (1/n) Σᵢ (yᵢ - ŷᵢ)²</span>
-          <p><b>2. Optimize with Gradient Descent:</b></p>
+          <div class="subtopic">Training: Find w̃ (parameters)</div>
+          <p><b>Step 1 — Loss function (MSE):</b></p>
+          <span class="formula-block">MSE = (1/n) Σ (yᵢ - ŷᵢ)²</span>
+          <p><b>Step 2 — Gradient Descent</b> to minimize MSE:</p>
           <span class="formula-block">w ← w − η · ∇L(w)</span>
           <ul>
-            <li><b>η</b> = learning rate (controls step size)</li>
-            <li>Higher η → faster but may overshoot; lower η → slower but stable</li>
-            <li>Repeat until convergence to get final weights <b>ŵ</b></li>
+            <li><b>η (eta)</b> = learning rate (step size)</li>
+            <li>Repeat until convergence → get <b>ŵ</b></li>
           </ul>
         </div>
       </div>
@@ -184,41 +180,38 @@
         <div class="box-body">
           <p><b>Total Error = Bias² + Variance + Irreducible Noise</b></p>
           <hr class="divider">
-          <div class="subtopic">Definitions</div>
           <table class="cs">
-            <tr><th>Term</th><th>Meaning</th></tr>
-            <tr><td><b>Bias</b></td><td>Systematic error from wrong assumptions. Model consistently off.</td></tr>
-            <tr><td><b>Variance</b></td><td>Sensitivity to training data. Small changes in data cause large prediction changes.</td></tr>
+            <tr><th>Term</th><th>Definition</th></tr>
+            <tr><td><b>Bias</b></td><td>Gap between true f(x) and average predictor. "Wrong assumptions."</td></tr>
+            <tr><td><b>Variance</b></td><td>Variability of predictions for a given point. "Too sensitive to training data."</td></tr>
           </table>
           <hr class="divider">
           <table class="cs">
-            <tr><th>Model Type</th><th>Bias</th><th>Variance</th><th>Problem</th></tr>
-            <tr><td>Simple</td><td class="highlight">↑ High</td><td class="green">↓ Low</td><td><b>Underfitting</b></td></tr>
-            <tr><td>Complex</td><td class="green">↓ Low</td><td class="highlight">↑ High</td><td><b>Overfitting</b></td></tr>
+            <tr><th>Model</th><th>Bias</th><th>Variance</th><th>Problem</th></tr>
+            <tr><td>Simple (low complexity)</td><td class="highlight">High</td><td class="green">Low</td><td>Underfitting</td></tr>
+            <tr><td>Complex (high complexity)</td><td class="green">Low</td><td class="highlight">High</td><td>Overfitting</td></tr>
           </table>
           <hr class="divider">
-          <div class="subtopic">Detection &amp; Fixes</div>
-          <p><b>Overfitting signature:</b> Train error ≪ Test/Val error (e.g., train MSE=1000, test=100k)</p>
-          <p><b>Fix overfitting:</b> Reduce complexity, add regularization, get more data, remove features</p>
-          <p><b>Fix underfitting:</b> Increase complexity, engineer better features</p>
+          <p><b>Overfitting signs:</b> Train error ≪ Test/Val error (like Q4: train MSE=1000, test=100k)</p>
+          <p><b>Fix overfitting:</b> ↓ complexity, add regularization, get more data, reduce features</p>
+          <p><b>Fix underfitting:</b> ↑ complexity, add features</p>
         </div>
       </div>
 
       <div class="box">
-        <div class="box-title">🔧 Regularization: Ridge vs. Lasso</div>
+        <div class="box-title">🔧 Ridge vs. Lasso Regularization</div>
         <div class="box-body">
           <table class="cs">
             <tr><th></th><th>Ridge (L2)</th><th>Lasso (L1)</th></tr>
-            <tr><td><b>Penalty Term</b></td><td>λ Σwᵢ²</td><td>λ Σ|wᵢ|</td></tr>
-            <tr><td><b>Weight Behavior</b></td><td>Shrinks all toward 0, never exactly zero</td><td><b>Can force weights to exactly 0</b></td></tr>
-            <tr><td><b>Feature Selection?</b></td><td><span class="tag-wrong">NO</span></td><td><span class="tag-correct">YES</span></td></tr>
-            <tr><td><b>Use When</b></td><td>All features likely useful</td><td>Want sparse model; remove irrelevant features</td></tr>
+            <tr><td><b>Penalty</b></td><td>λ Σwᵢ²</td><td>λ Σ|wᵢ|</td></tr>
+            <tr><td><b>Effect on weights</b></td><td>Shrinks toward 0, never exactly 0</td><td><b>Can set weights exactly to 0</b></td></tr>
+            <tr><td><b>Feature selection?</b></td><td><span class="tag-wrong">NO</span></td><td><span class="tag-correct">YES</span></td></tr>
+            <tr><td><b>Best for</b></td><td>All features somewhat useful</td><td>Sparse solutions; selecting prominent features</td></tr>
           </table>
           <hr class="divider">
-          <div class="subtopic">Key Insight</div>
-          <p><span class="highlight">For feature selection, ALWAYS use Lasso (L1).</span> Ridge keeps all features but small.</p>
-          <p><b>Lasso tip:</b> Higher λ → more weights become zero. Features with non-zero weights = most important.</p>
-          <p><b>λ (lambda):</b> Regularization strength, chosen via cross-validation.</p>
+          <p><span class="highlight">Key rule:</span> Use <b>Lasso</b> for feature selection. Ridge keeps all features but small. (Q5: Ridge ≠ feature selection!)</p>
+          <p><b>Lasso path:</b> Higher λ → more weights → 0. Features staying non-zero = most important.</p>
+          <p><b>λ (lambda)</b> = regularization strength. Chosen via cross-validation.</p>
         </div>
       </div>
 
@@ -228,52 +221,55 @@
     <div class="col">
 
       <div class="box">
-        <div class="box-title">🔀 Model Selection via Cross-Validation</div>
+        <div class="box-title">🔀 Hyperparameter Selection &amp; Cross-Validation</div>
         <div class="box-body">
-          <div class="subtopic">What are Hyperparameters?</div>
-          <p>Settings NOT learned from data: model complexity, λ, tree depth, learning rate, etc.</p>
+          <div class="subtopic">What are hyperparameters?</div>
+          <p>Settings not learned from data: model complexity, <b>λ</b>, tree depth, etc.</p>
 
-          <div class="subtopic">K-Fold Cross-Validation Process</div>
+          <div class="subtopic">K-Fold Cross-Validation</div>
           <ul>
-            <li>Split training set into <b>K</b> equal folds</li>
-            <li>For each fold: train on K-1 folds, validate on the remaining fold</li>
-            <li>Repeat K times (each fold used for validation once)</li>
-            <li>Average all validation errors → <b>CV error estimate</b></li>
-            <li><b>Pick model with lowest mean CV error</b></li>
+            <li>Split training data into <b>K</b> folds</li>
+            <li>Train on K-1 folds, validate on remaining fold — repeat K times</li>
+            <li>Average validation errors → <b>mean CV error</b></li>
+            <li>Pick model with <b>lowest mean CV error</b></li>
           </ul>
           <hr class="divider">
-          <div class="subtopic">Which Error for Selection?</div>
+          <div class="subtopic">Model Selection Rules (Q3)</div>
           <table class="cs">
-            <tr><th>Error Type</th><th>Use for Selection?</th><th>Why</th></tr>
-            <tr><td>Train Error</td><td><span class="tag-wrong">NO</span></td><td>Optimistic; doesn't reflect generalization</td></tr>
-            <tr><td>CV Error</td><td><span class="tag-correct">YES ✓</span></td><td>Unbiased estimate; no data leakage</td></tr>
-            <tr><td>Test Error</td><td><span class="tag-wrong">NO</span></td><td>Contaminated after peeking; use once only at end</td></tr>
+            <tr><th>Error Type</th><th>Use for selection?</th><th>Why</th></tr>
+            <tr><td>Train Error</td><td><span class="tag-wrong">NO</span></td><td>Risk of overfitting</td></tr>
+            <tr><td>CV Error</td><td><span class="tag-correct">YES ✓</span></td><td>Unbiased estimate of generalization</td></tr>
+            <tr><td>Test Error</td><td><span class="tag-wrong">NO</span></td><td>No longer unbiased after peeking</td></tr>
           </table>
+          <p style="margin-top:2px">Test set = used <b>once</b> at the very end to estimate real-world error.</p>
+
           <hr class="divider">
-          <p><b>Golden Rule:</b> Use CV to select among candidate models. Use test set <i>exactly once</i> for final evaluation.</p>
+          <div class="subtopic">Q3 Example</div>
+          <table class="cs">
+            <tr><th>Model</th><th>Train Err</th><th>Mean CV Err</th><th>Test Err</th></tr>
+            <tr><td>M1</td><td>0.15</td><td>0.23</td><td>0.20</td></tr>
+            <tr><td>M2</td><td>0.17</td><td class="green"><b>0.07 ✓</b></td><td>0.15</td></tr>
+            <tr><td>M3</td><td>0.12</td><td>0.13</td><td>0.10</td></tr>
+          </table>
+          <p>→ Choose <b>M2</b> (lowest CV error), NOT M3 despite lowest train/test error.</p>
         </div>
       </div>
 
       <div class="box">
-        <div class="box-title">📊 Classification Essentials</div>
+        <div class="box-title">📊 Classification Basics</div>
         <div class="box-body">
-          <div class="subtopic">What is Classification?</div>
-          <p>Predict discrete labels (0/1, spam/ham, approve/reject, etc.)</p>
-
-          <div class="subtopic">Score Function &amp; Decision Boundary</div>
+          <p>Predicts <b>discrete labels</b> (spam/not spam, approval/rejection, etc.)</p>
+          <div class="subtopic">Score function &amp; Decision Boundary</div>
           <span class="formula-block">Score(x) = wᵀh(x)</span>
           <ul>
-            <li><b>Score(x) > 0</b> → predict positive class (+1)</li>
-            <li><b>Score(x) < 0</b> → predict negative class (-1)</li>
-            <li><b>Score(x) = 0</b> → <b>decision boundary</b> (separator line/plane)</li>
+            <li><b>Score(x) > 0</b> → predict positive class</li>
+            <li><b>Score(x) < 0</b> → predict negative class</li>
+            <li><b>Score(x) = 0</b> → <b>decision boundary</b> (the dividing line/hyperplane)</li>
           </ul>
-
-          <div class="subtopic">Class Imbalance Trap</div>
-          <p>High accuracy is <b>misleading</b> with imbalanced data. Example: 99% negative class → always predict negative = 99% accuracy, zero skill!</p>
-          <p><b>Fix:</b> Use precision, recall, F1-score instead of accuracy.</p>
-
-          <div class="subtopic">Learning Curves</div>
-          <p>Plot of train/validation error vs. dataset size. Diagnoses bias (curves far apart = variance; curves high together = bias).</p>
+          <div class="subtopic">Class Imbalance</div>
+          <p>High accuracy can be <b>misleading</b> when classes are imbalanced. E.g., 99% not-spam → always predicting not-spam = 99% accuracy but useless!</p>
+          <div class="subtopic">Learning Curve</div>
+          <p>Plot of train/val error vs. training size. Used to diagnose bias vs. variance issues.</p>
         </div>
       </div>
 
@@ -283,56 +279,61 @@
     <div class="col">
 
       <div class="box">
-        <div class="box-title">📉 Logistic Regression for Classification</div>
+        <div class="box-title">📉 Logistic Regression</div>
         <div class="box-body">
           <div class="subtopic">When to Use</div>
           <ul>
-            <li>Binary classification (exactly 2 classes)</li>
-            <li>Features are roughly independent</li>
-            <li>Need probability output: P(class | features)</li>
-            <li>Example: P(heart attack | age, exercise, sleep)</li>
+            <li>Binary classification (only <b>two possible outcomes</b>)</li>
+            <li>Features must be <b>independent</b> from each other</li>
+            <li>Want to output <b>probability</b> of class membership</li>
+            <li>Example (Q6): Predict P(heart attack | exercise, sleep)</li>
           </ul>
-
           <div class="subtopic">Sigmoid Function</div>
-          <p>Converts score (−∞ to +∞) into probability (0 to 1):</p>
-          <span class="formula-block">P(y=+1 | x) = σ(Score) = 1 / (1 + e^(−Score))</span>
-          <span class="formula-block">P(y=−1 | x) = 1 − P(y=+1 | x)</span>
-          <p>Key property: σ(0) = 0.5 (decision boundary)</p>
+          <span class="formula-block">P(y=+1 | x) = 1 / (1 + e^(−Score(x)))</span>
+          <span class="formula-block">P(y=−1 | x) = 1 − P(y=+1 | x) = 1 / (1 + e^(Score(x)))</span>
 
           <div class="subtopic">Training: Maximum Likelihood</div>
-          <p>Find weights that maximize likelihood of observed labels.</p>
-          <p>Use <b>gradient ascent</b> (climbing likelihood hill) with learning rate η.</p>
-          <p><b>Difference from regression:</b> Regression uses gradient descent; logistic uses gradient ascent.</p>
+          <p>Find weights that maximize the likelihood of the observed data.</p>
+          <p>Use <b>gradient ascent</b> (going <i>up</i> the hill) with learning rate η.</p>
 
-          <div class="subtopic">Worked Example</div>
-          <p><b>Model:</b> Score(x) = 2h₁ + 4h₂ − 3h₃ − h₄ (h₅ omitted, weight=0)</p>
-          <p><b>Features:</b> h₁="amazing" count, h₂="ok" count, h₃="bad" count, h₄="not" count</p>
-          <p><b>Sentence:</b> "...amazing...ok...not bad..." → h₁=2, h₂=1, h₃=3, h₄=1</p>
-          <span class="formula-block">Score = 2(2) + 4(1) − 3(3) − 1 = 4 + 4 − 9 − 1 = −2</span>
-          <span class="formula-block">P(negative) = 1 / (1 + e^(−(−2))) = 1 / (1 + e^2) ≈ 0.119</span>
-          <p><b>Interpretation:</b> Model predicts ~12% chance of negative class.</p>
+          <div class="subtopic">Worked Example (Slide 15)</div>
+          <p>Features: h1=count("amazing"), h2=count("ok"), h3=count("bad"), h4=count("not"), h5=count("very")</p>
+          <span class="formula-block">Score(x) = 2h1 + 4h2 − 3h3 − h4</span>
+          <p>Sentence: <i>"Tom and Jerry is the very very amazing. It is not bad at all, it is more than ok, it is amazing!"</i></p>
+          <span class="formula-block">h1=2, h2=1, h3=3, h4=1, h5=2 (h5 not in model)</span>
+          <span class="formula-block">Score = 2(2)+4(1)−3(3)−1(1) = 4+4−9−1 = −2</span>
+          <span class="formula-block">P(−|x) = 1/(1+e^Score) = 1/(1+e^−2) ≈ 0.119</span>
+          <p><b>P(negative class) = 0.119</b></p>
+
+          <div class="subtopic">Overfitting in Logistic Regression</div>
+          <p>Fix with regularization (Lasso/Ridge) or early stopping.</p>
         </div>
       </div>
 
       <div class="box">
-        <div class="box-title">🧹 Data Preprocessing Rules</div>
+        <div class="box-title">🧹 Data Preprocessing — Key Rules</div>
         <div class="box-body">
-          <div class="subtopic">Standardization (Z-score)</div>
-          <p>Scale features to mean=0, std=1.</p>
-          <p><span class="highlight">Only when features in compatible units.</span></p>
-          <p><b>Rule:</b> If different units (USD vs EUR) → convert to same unit first, THEN standardize.</p>
-
-          <div class="subtopic">Feature Selection</div>
-          <p><span class="highlight">Use Lasso (L1), NOT Ridge.</span> Sweep λ; features with non-zero weights survive → those are important.</p>
-
-          <div class="subtopic">Adding Features Myth</div>
-          <p>If train error ≪ test error → overfitting. <span class="highlight">Do NOT add features; reduce complexity instead.</span></p>
-
-          <div class="subtopic">Decision Trees</div>
+          <div class="subtopic">Standardization (Z-score scaling)</div>
           <ul>
-            <li>Unlimited depth → memorizes training data → severe overfitting</li>
-            <li><b>Fix:</b> Set max_depth hyperparameter (prune tree)</li>
-            <li>Deeper ≠ better generalization</li>
+            <li>Scales to mean=0, variance=1</li>
+            <li><span class="highlight">Only use when data is in the SAME units</span></li>
+            <li>Q1: Differing currencies → <b>convert units first, THEN standardize</b></li>
+            <li>Good when different <i>features</i> have different scales</li>
+          </ul>
+          <div class="subtopic">Feature Selection (Q5)</div>
+          <p>Use <b>Lasso</b> (L1), NOT Ridge, to reduce features. Sweep λ values — features with non-zero weights = important.</p>
+          <div class="subtopic">Adding Features (Q4)</div>
+          <p>If train error ≪ test error → overfitting → <span class="highlight">reduce features/complexity</span>, do NOT add more features.</p>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="box-title">🌳 Decision Trees (Q7)</div>
+        <div class="box-body">
+          <ul>
+            <li>No max depth → tree memorizes training data → <b>overfitting</b></li>
+            <li>Deeper tree ≠ better generalization</li>
+            <li><b>Fix:</b> Set a max depth (prune) to reduce variance</li>
           </ul>
         </div>
       </div>
@@ -345,97 +346,95 @@
 
 <!-- ═══════════════════════ SIDE 2 ═══════════════════════ -->
 <div class="page">
-  <div class="page-header">CSE 416 — MIDTERM CHEAT SHEET &nbsp;|&nbsp; SIDE 2: Fairness, Diagnostics &amp; Quick Reference</div>
+  <div class="page-header">CSE 416 — MIDTERM CHEAT SHEET &nbsp;|&nbsp; SIDE 2: Fairness, Practice Problems &amp; Quick Reference</div>
   <div class="cols">
 
     <!-- COL 1 -->
     <div class="col">
 
       <div class="box">
-        <div class="box-title">⚖️ Bias &amp; Fairness Frameworks</div>
+        <div class="box-title">⚖️ Bias &amp; Fairness</div>
         <div class="box-body">
-          <div class="subtopic">Two Worldviews in ML Ethics</div>
+          <div class="subtopic">Two Worldviews</div>
           <table class="cs">
-            <tr><th>Worldview</th><th>Core Belief</th><th>Action</th></tr>
+            <tr><th>Worldview</th><th>Core Belief</th><th>Example stance</th></tr>
             <tr>
-              <td><b>WAE</b><br><i>We're All Equal</i></td>
-              <td>Disparities = systemic bias in society. Protected attributes encode historical inequity.</td>
-              <td>Remove correlated features; build bias-aware models</td>
+              <td><b>WAE</b><br>(We're All Equal)</td>
+              <td>Observed disparities = structural bias. Protected group membership should NOT cause task differences.</td>
+              <td>Data Scientist A: remove university &amp; neighborhood — they encode historical bias.</td>
             </tr>
             <tr>
-              <td><b>WYSIWYG</b><br><i>What You See Is What You Get</i></td>
-              <td>Data reflects true underlying patterns. Use all predictive signals.</td>
-              <td>Keep all features; let data speak; model current reality</td>
+              <td><b>WYSIWYG</b><br>(What You See Is What You Get)</td>
+              <td>Observed space is a good representation of construct space. Data reflects real-world patterns.</td>
+              <td>Data Scientist B: keep all predictive features; "let the data speak."</td>
             </tr>
           </table>
 
+          <div class="subtopic">Pareto Frontier</div>
+          <p>Set of models where you cannot improve fairness without hurting accuracy (or vice versa). Shows the <b>tradeoff</b> between performance and fairness.</p>
+
           <div class="subtopic">Model Spaces</div>
           <ul>
-            <li><b>Construct space:</b> True underlying reality (e.g., true creditworthiness)</li>
-            <li><b>Observed space:</b> Measurable proxies (e.g., zip code, credit score)</li>
-            <li><b>WAE belief:</b> Observed ≠ Construct (measurement bias distorts truth)</li>
-            <li><b>WYSIWYG belief:</b> Observed ≈ Construct (measurements are accurate)</li>
+            <li><b>Construct Space:</b> True underlying qualities (e.g., intelligence, credit-worthiness)</li>
+            <li><b>Observed Space:</b> Measurable proxies (e.g., SAT score, zip code)</li>
+            <li><b>WYSIWYG:</b> Observed ≈ Construct</li>
+            <li><b>WAE:</b> Observed ≠ Construct (bias distorts observations)</li>
           </ul>
 
-          <div class="subtopic">Pareto Frontier</div>
-          <p>Set of models where you cannot improve fairness without hurting accuracy (and vice versa). Shows the fundamental <b>fairness-accuracy tradeoff.</b></p>
-
-          <div class="subtopic">Takeaway</div>
-          <p>There is no "objectively correct" answer. Both worldviews are philosophically valid. The choice depends on:</p>
-          <ul>
-            <li>Domain knowledge (is bias real in this context?)</li>
-            <li>Stakeholder values (fairness vs. accuracy priority)</li>
-            <li>Legal/ethical requirements</li>
-          </ul>
+          <hr class="divider">
+          <div class="subtopic">Q2 Answer Summary</div>
+          <p><b>Scientist A = WAE:</b> Disparities are due to systemic bias → correct for it by removing biased features.</p>
+          <p><b>Scientist B = WYSIWYG:</b> Data reflects reality → use all predictive signals, even if correlated with protected attributes.</p>
+          <p><b>Core difference:</b> Whether observed group differences are "real" or artifacts of structural inequity.</p>
         </div>
       </div>
 
       <div class="box">
-        <div class="box-title">📋 Exam Problems Quick Ref</div>
+        <div class="box-title">📋 Practice Problems Quick Reference</div>
         <div class="box-body">
           <table class="cs">
-            <tr><th>Q</th><th>Scenario</th><th>Pitfall</th><th>Answer</th></tr>
+            <tr><th>Q</th><th>Scenario</th><th>Wrong Action</th><th>Correct Answer</th></tr>
             <tr>
               <td>1</td>
-              <td>Mixed currency features</td>
+              <td>Features in different currencies</td>
               <td>Standardize as-is</td>
-              <td><b>Convert to common unit first, then standardize</b></td>
+              <td><b>Convert to same units first</b>, then standardize if needed</td>
             </tr>
             <tr>
               <td>2</td>
-              <td>WAE vs WYSIWYG</td>
-              <td>Confuse philosophies</td>
-              <td>A=WAE (remove bias), B=WYSIWYG (keep signals)</td>
+              <td>WAE vs WYSIWYG debate</td>
+              <td>—</td>
+              <td>A=WAE (remove biased features), B=WYSIWYG (keep signals)</td>
             </tr>
             <tr>
               <td>3</td>
-              <td>Pick best model</td>
-              <td>Use train/test error</td>
-              <td><b>Use CV error</b> (lowest wins)</td>
+              <td>Model selection from 3 models</td>
+              <td>Pick M3 (lowest train/test)</td>
+              <td><b>Pick M2</b> (lowest mean CV error = 0.07)</td>
             </tr>
             <tr>
               <td>4</td>
-              <td>Train ≪ test error</td>
+              <td>Train MSE=1k, Test MSE=100k</td>
               <td>Add more features</td>
-              <td><b>Reduce complexity</b> (overfitting)</td>
+              <td><b>Reduce complexity</b> — model is overfitting</td>
             </tr>
             <tr>
               <td>5</td>
-              <td>Feature selection</td>
-              <td>Use Ridge</td>
-              <td><b>Use Lasso</b> (forces zeros)</td>
+              <td>200 features, want fewer</td>
+              <td>Use Ridge for feature selection</td>
+              <td><b>Use Lasso</b> — Ridge never zeros weights</td>
             </tr>
             <tr>
               <td>6</td>
-              <td>P(disease | factors)</td>
-              <td>Linear regression</td>
-              <td><b>Logistic regression</b> (outputs probabilities)</td>
+              <td>Exercise/sleep → P(heart attack)</td>
+              <td>—</td>
+              <td><b>Logistic Regression</b> — gives probabilities for binary outcome</td>
             </tr>
             <tr>
               <td>7</td>
               <td>Decision tree, no max depth</td>
-              <td>"More is better"</td>
-              <td><b>Overfitting</b> — set max_depth to regularize</td>
+              <td>"Deeper = more nuance"</td>
+              <td><b>Incorrect</b> — unlimited depth → overfitting. Set max depth!</td>
             </tr>
           </table>
         </div>
@@ -447,31 +446,52 @@
     <div class="col">
 
       <div class="box">
-        <div class="box-title">🧮 Essential Formulas</div>
+        <div class="box-title">🧮 Key Formulas at a Glance</div>
         <div class="box-body">
-          <div class="subtopic">Regression Loss</div>
-          <span class="formula-block">MSE = (1/n) Σᵢ (yᵢ − ŷᵢ)²</span>
+          <div class="subtopic">MSE Loss</div>
+          <span class="formula-block">L(w) = (1/n) Σᵢ (yᵢ − wᵀh(xᵢ))²</span>
 
-          <div class="subtopic">Gradient Descent</div>
+          <div class="subtopic">Gradient Descent Update</div>
           <span class="formula-block">w_new = w_old − η · ∇L(w_old)</span>
 
           <div class="subtopic">Regularized Loss</div>
-          <span class="formula-block">Ridge: L(w) + λ Σⱼ wⱼ²</span>
-          <span class="formula-block">Lasso: L(w) + λ Σⱼ |wⱼ|</span>
+          <span class="formula-block">Ridge: L(w) + λ Σwⱼ²</span>
+          <span class="formula-block">Lasso: L(w) + λ Σ|wⱼ|</span>
 
           <div class="subtopic">Logistic Sigmoid</div>
           <span class="formula-block">σ(s) = 1 / (1 + e^(−s))</span>
+          <span class="formula-block">P(y=+1|x) = σ(Score(x)) = 1/(1+e^−Score)</span>
+          <span class="formula-block">P(y=−1|x) = 1 − σ(Score(x)) = 1/(1+e^Score)</span>
 
-          <div class="subtopic">Logistic Classification</div>
-          <span class="formula-block">P(+1 | x) = 1 / (1 + e^(−Score))</span>
-          <span class="formula-block">P(−1 | x) = 1 / (1 + e^Score)</span>
-          <p>Predict +1 if Score > 0; −1 if Score < 0.</p>
+          <div class="subtopic">Logistic Regression Score</div>
+          <span class="formula-block">Score(x) = wᵀh(x) = w₀ + w₁h₁(x) + … + wₙhₙ(x)</span>
+          <p>Predict +1 if Score > 0, −1 if Score < 0.</p>
 
-          <div class="subtopic">Score Function</div>
-          <span class="formula-block">Score(x) = w₀ + w₁h₁(x) + … + wₙhₙ(x)</span>
+          <div class="subtopic">Bias-Variance Decomposition</div>
+          <span class="formula-block">E[Error] = Bias² + Variance + Noise</span>
+        </div>
+      </div>
 
-          <div class="subtopic">Error Decomposition</div>
-          <span class="formula-block">E[Error] = Bias² + Variance + Irreducible Noise</span>
+      <div class="box">
+        <div class="box-title">🔁 Worked Logistic Regression Problem</div>
+        <div class="box-body">
+          <p><b>Score(x) = 2h1 + 4h2 − 3h3 − h4</b> (h5 has weight 0)</p>
+          <p>Sentence: <i>"Tom and Jerry is the very very amazing. It is not bad at all, it is more than ok, it is amazing!"</i></p>
+          <hr class="divider">
+          <table class="cs">
+            <tr><th>Feature</th><th>Word</th><th>Count</th></tr>
+            <tr><td>h1</td><td>"amazing"</td><td>2</td></tr>
+            <tr><td>h2</td><td>"ok"</td><td>1</td></tr>
+            <tr><td>h3</td><td>"bad"</td><td>1 (note: "not bad" still counts!)</td></tr>
+            <tr><td>h4</td><td>"not"</td><td>1</td></tr>
+            <tr><td>h5</td><td>"very"</td><td>2 (weight=0, ignored)</td></tr>
+          </table>
+          <hr class="divider">
+          <span class="formula-block">Score = 2(2) + 4(1) − 3(1) − 1(1) = 4+4−3−1 = 4</span>
+          <p><i>Note: Slide answer uses h3=3 ("bad" appears 3 times) and h5=1 (once), giving Score=−2. Count carefully in your exam!</i></p>
+          <span class="formula-block">Slide answer: Score = 2(2)+4(1)−3(3)−1(1) = −2</span>
+          <span class="formula-block">P(neg|x) = 1/(1+e^(−(−2))) = 1/(1+e^(−2)) ≈ 0.119</span>
+          <p><b>Formula to remember:</b> P(negative) = 1/(1 + e^Score)   [note: Score without negation]</p>
         </div>
       </div>
 
@@ -481,56 +501,69 @@
     <div class="col">
 
       <div class="box">
-        <div class="box-title">🗺️ ML Pipeline Overview</div>
+        <div class="box-title">🗺️ Concept Map / Big Picture</div>
         <div class="box-body">
-          <div class="subtopic">Step-by-Step</div>
-          <p><b>1. Collect &amp; Clean:</b> Handle missing data, outliers, standardize units</p>
-          <p><b>2. Preprocess:</b> Standardize if needed, encode categorical, select features</p>
-          <p><b>3. Split:</b> Train (60%), validation (20%), test (20%)</p>
-          <p><b>4. Model:</b> Choose algorithm (linear, logistic, tree, etc.)</p>
-          <p><b>5. Train:</b> Minimize loss via gradient descent/ascent</p>
-          <p><b>6. Tune:</b> Use CV to optimize hyperparameters</p>
-          <p><b>7. Evaluate:</b> Test set = final unbiased estimate, use once only</p>
-          <p><b>8. Deploy:</b> Monitor for fairness, data drift</p>
-
+          <div class="subtopic">ML Pipeline</div>
+          <p><b>1. Data</b> → Clean, standardize (same units!), feature engineer</p>
+          <p><b>2. Model</b> → Choose type (linear reg, logistic reg, decision tree…)</p>
+          <p><b>3. Train</b> → Minimize loss via gradient descent</p>
+          <p><b>4. Validate</b> → K-fold CV to tune hyperparameters (λ, depth…)</p>
+          <p><b>5. Evaluate</b> → Use test set <i>once</i> for final unbiased estimate</p>
+          <p><b>6. Deploy</b> → Monitor for fairness, distribution shift</p>
           <hr class="divider">
-          <div class="subtopic">Error Diagnosis Chart</div>
+          <div class="subtopic">Diagnosing Model Problems</div>
           <table class="cs">
-            <tr><th>Symptom</th><th>Diagnosis</th><th>Fix</th></tr>
-            <tr><td>High train + high val</td><td>Underfitting / High Bias</td><td>↑ complexity, add features</td></tr>
-            <tr><td>Low train, high val</td><td>Overfitting / High Var</td><td>Regularize, ↓ complexity</td></tr>
-            <tr><td>Good CV, bad test</td><td>Test data leakage</td><td>Don't peek; test once</td></tr>
-            <tr><td>High acc, low recall</td><td>Imbalanced classes</td><td>Use F1, precision-recall curves</td></tr>
+            <tr><th>Symptom</th><th>Problem</th><th>Fix</th></tr>
+            <tr><td>High train AND val error</td><td>Underfitting / High Bias</td><td>↑ complexity, add features</td></tr>
+            <tr><td>Low train, high val error</td><td>Overfitting / High Variance</td><td>Regularize, ↓ complexity, more data</td></tr>
+            <tr><td>Good CV, bad test</td><td>Data leakage / test peeking</td><td>Never use test until end</td></tr>
+            <tr><td>High acc, imbalanced classes</td><td>Class imbalance</td><td>Use precision/recall, F1</td></tr>
           </table>
         </div>
       </div>
 
       <div class="box">
-        <div class="box-title">📌 Decision Guide</div>
+        <div class="box-title">📌 Quick Decision Guide</div>
         <div class="box-body">
-          <div class="subtopic">Algorithm Choice</div>
+          <div class="subtopic">Which method?</div>
           <table class="cs">
             <tr><th>Goal</th><th>Use</th></tr>
             <tr><td>Predict continuous value</td><td>Linear Regression</td></tr>
             <tr><td>Predict binary class</td><td>Logistic Regression</td></tr>
-            <tr><td>Output P(class | x)</td><td>Logistic Regression</td></tr>
-            <tr><td>Feature selection (sparse)</td><td>Lasso (L1)</td></tr>
-            <tr><td>Shrink weights uniformly</td><td>Ridge (L2)</td></tr>
-            <tr><td>Non-linear boundaries</td><td>Decision Tree / SVM</td></tr>
-            <tr><td>Tune hyperparameters</td><td>K-Fold CV</td></tr>
+            <tr><td>Predict P(class | features)</td><td>Logistic Regression</td></tr>
+            <tr><td>Feature selection</td><td>Lasso (L1)</td></tr>
+            <tr><td>Shrink all weights evenly</td><td>Ridge (L2)</td></tr>
+            <tr><td>Non-linear decision boundary</td><td>Decision Tree / non-linear model</td></tr>
+            <tr><td>Tune λ or model complexity</td><td>K-fold Cross-Validation</td></tr>
           </table>
-
-          <div class="subtopic">Common Pitfalls</div>
+          <div class="subtopic">Fairness Questions to Ask</div>
           <ul>
-            <li><span class="highlight">Ridge ≠ feature selection</span> (only Lasso)</li>
-            <li><span class="highlight">Never use test for model selection</span> (CV only)</li>
-            <li><span class="highlight">Train ≪ test = overfitting</span> (don't add features!)</li>
+            <li>Does my training data reflect structural bias? (WAE view)</li>
+            <li>Are features proxies for protected attributes?</li>
+            <li>What's my model's impact on different groups (Pareto)?</li>
+          </ul>
+          <div class="subtopic">Standardization Checklist</div>
+          <ul>
+            <li>✅ Same units within a feature? → OK to standardize</li>
+            <li>✅ Different features with different scales? → Standardize</li>
+            <li>❌ Mixed units in same feature → Convert first!</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="box-title">💡 Common Exam Traps</div>
+        <div class="box-body">
+          <ul>
+            <li><span class="highlight">Ridge ≠ feature selection</span> — Lasso does it</li>
+            <li><span class="highlight">Never select model by test error</span> — use CV</li>
+            <li><span class="highlight">Low train error + high test error = overfitting</span> — add more features won't help</li>
             <li><span class="highlight">High accuracy ≠ good model</span> (class imbalance!)</li>
-            <li><span class="highlight">Score(x) = 0</span> is the boundary</li>
-            <li><span class="highlight">Logistic requires feature independence</span></li>
-            <li><span class="highlight">Regression: gradient descent↓</span>, <span class="highlight">Logistic: gradient ascent↑</span></li>
-            <li><span class="highlight">λ = 0</span> = no regularization; <span class="highlight">λ → ∞</span> = all weights → 0</li>
-            <li><span class="highlight">Tree depth is a hyperparameter</span> (control overfitting!)</li>
+            <li><span class="highlight">Score(x)=0</span> is the <b>decision boundary</b></li>
+            <li><span class="highlight">Logistic regression requires independence</span> of features and binary outcome</li>
+            <li><span class="highlight">Gradient <i>ascent</i></span> for logistic (maximizing likelihood), gradient <i>descent</i> for regression (minimizing loss)</li>
+            <li><span class="highlight">Decision tree depth</span> = hyperparameter; unlimited depth → overfitting</li>
+            <li><span class="highlight">λ=0</span> → no regularization; <b>λ→∞</b> → all weights → 0</li>
           </ul>
         </div>
       </div>
